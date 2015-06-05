@@ -118,6 +118,14 @@ for city in cities:
     t.up()
 
 # Perform an attribute query
+# Because we are dealing with nested lists in our data model, we take advantage of the
+# key argument in those functions. The key argument accepts a function that temporarily
+# alters the list for evaluation before a final value is returned.
+# Here, we want to isolate the population values for comparison and then the points.
+# We could have written a whole new function to return the specified value but instead
+# use Python's lambda keyword. Lambda keyword defines an anonymous function that is used inline.
+# This temporary function isolates our value of interest.
+ 
 # Question: Which city has the largest population?
 # Write the result but make sure it's under the map
 biggest_city = max(cities, key=lambda city: city[POP])
