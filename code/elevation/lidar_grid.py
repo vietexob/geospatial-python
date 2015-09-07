@@ -10,7 +10,7 @@ import numpy as np
 source = './data/elevation/lidar.las'
 
 ## Output ASCII DEM file
-target = './data/elevation/libdar.asc'
+target = './data/elevation/lidar.asc'
 
 ## Grid cell size (data units)
 cell = 1.0
