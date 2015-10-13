@@ -139,7 +139,7 @@ def astar(start, end, h):
                     ## If the node isn't better, seal it off
                     cset.add(option)
                 ## Uncomment this print statement to watch the path develop in real time
-                print(best, e_dist(best, end))
+#                 print(best, e_dist(best, end))
         ## Add the best node to the open set
         oset.add(best)
     return[]
