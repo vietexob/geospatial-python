@@ -21,7 +21,6 @@ import logging
 import sys
 import fpdf
 
-
 ## Python logging module provides a more advanced way to track and log program progress.
 ## Logging level -- everything at or below this level will output. INFO is below.
 level = logging.DEBUG
@@ -237,11 +236,162 @@ image = srt.get_image((w, h), (miny, maxy), (minx, maxx), 300, zero_color=zero_c
 image.save(elv_img + '.jpg', 'JPEG')
 
 ## Hillshade the elevation image
+log.info('Hillshading elevation data')
+im = Image.open(elv_img + '.jpg').convert('L')
+dem = np.asarray(im)
 
+## Set up structure for a 3x3 to process the slope throughout the grid
+window = []
+## x, y resolutions
+xres = (maxx - minx) / w
+yres = (maxy - miny) / h
 
+## Create the windows
+for row in range(3):
+    for col in range(3):
+        window.append(dem[row:(row + dem.shape[0]-2), col:(col + dem.shape[1]-2)])
 
+## Process each cell
+x = ((z*window[0] + 2*z*window[3] + z*window[6]) - (z*window[2] + 2*z*window[5] + z*window[8])) / (8.0*xres*scale)
+y = ((z*window[6] + 2*z*window[7] + z*window[8]) - (z*window[0] + 2*z*window[1] + z*window[2])) / (8.0*yres*scale)
 
+## Calculate the slope
+slope = 90.0 - np.arctan(np.sqrt(x*x + y*x)) * rad2deg
+## Calculate aspect
+aspect = np.arctan2(x, y)
+## Calculate the shaded relief
+shaded = np.sin(altitude*deg2rad) * np.sin(slope*deg2rad) + np.cos(altitude*deg2rad) * np.cos(slope*deg2rad) * np.cos((azimuth-90.0) * deg2rad-aspect)
+shaded = shaded * 255
 
+## Convert the numpy array back to an image
+relief = Image.fromarray(shaded).convert('L')
+## Smooth the image several times so it's not pixelated
+for i in range(10):
+    relief = relief.filter(ImageFilter.SMOOTH_MORE)
+log.info('Creating map image')
+
+## Increase the hillshade contrast to make it stand out more
+e = ImageEnhance.Contrast(relief)
+relief = e.enhance(2)
+
+## Crop the image to match the SRTM image. We lose 2 pixels during the hillshading process
+base = Image.open(osm_img + '.jpg').crop((0, 0, w-2, h-2))
+
+## Enhance basemap contrast before blending
+e = ImageEnhance.Contrast(base)
+base = e.enhance(1)
+
+## Blend the map and hillshade at 90% opacity
+topo = Image.blend(relief.convert('RGB'), base, 0.90)
+
+## Draw the GPX tracks
+## Convert the coordinates to pixels
+points = []
+for x, y in zip(lons, lats):
+    px, py = world2pixel(x, y, w, h, bbox)
+    points.append((px, py))
+
+## Crop the image size values to match the map
+w -= 2
+h -= 2
+## Set up an translucent image to draw the route.
+## This technique allows us to see the streets and street names under the route line.
+track = Image.new('RGBA', (w, h))
+track_draw = ImageDraw.Draw(track)
+
+## Route line will be red at 50% transparency (255/2 = 127)
+track_draw.line(points, fill=(255, 0, 0, 127), width=4)
+
+## Paste onto the basemap using the drawing layer itself as a mask.
+topo.paste(track, mask=track)
+
+## Now we'll draw start and end points directly on top of our map. No need for transparency
+topo_draw = ImageDraw.Draw(topo)
+
+## Starting cycle
+start_lon, start_lat = (lons[0], lats[0])
+start_x, start_y = world2pixel(start_lon, start_lat, w, h, bbox)
+start_point = [start_x-10, start_y-10, start_x+10, start_y+10]
+topo_draw.ellipse(start_point, fill='lightgreen', outline='black')
+start_marker = [start_x-4, start_y-4, start_x+4, start_y+4]
+topo_draw.ellipse(start_marker, fill='black', outline='white')
+
+## Ending circle
+end_lon, end_lat = (lons[-1], lats[-1])
+end_x, end_y = world2pixel(end_lon, end_lat, w, h, bbox)
+end_point = [end_x-10, end_y-10, end_x+10, end_y+10]
+topo_draw.ellipse(end_point, fill='red', outline='black')
+end_marker = [end_x-4, end_y-4, end_x+4, end_y+4]
+topo_draw.ellipse(end_marker, fill='black', outline='white')
+
+## Save the topo map
+topo.save('{}_topo.jpg'.format(osm_img))
+
+## Build elevation chart using Google Charts API
+log.info('Creating elevation profile chart')
+chart = SimpleLineChart(600, 300, y_range=[min(elvs), max(elvs)])
+
+## API quirk: You need 3 lines of data to color in the plot, so we add
+## a line at minimum value twice.
+chart.add_data([min(elvs)]*2)
+chart.add_data(elvs)
+chart.add_data([min(elvs)]*2)
+
+## Black lines
+chart.set_colours(['000000'])
+## Fill in the elevation area with a hex color
+chart.add_fill_range('80C65A', 1, 2)
+
+## Set up labels for the min elevation, halfway value, and max value
+elv_labels = int(round(min(elvs))), int(min(elvs) + ((max(elvs)-min(elvs)/2))), int(round(max(elvs))) 
+## Assign the labels to an axis
+elv_label = chart.set_axis_labels(Axis.LEFT, elv_labels)
+## Label the axis
+elv_text = chart.set_axis_labels(Axis.LEFT, ['FEET'])
+## Place the label at 30% the distance of the line
+chart.set_axis_positions(elv_text, [30])
+
+## Calculate distances between track segments
+distances = []
+measurements = []
+coords = list(zip(lons, lats))
+for i in range(len(coords)-1):
+    x1, y1 = coords[i]
+    x2, y2 = coords[i+1]
+    d = haversine(x1, y1, x2, y2)
+    distances.append(d)
+
+total = sum(distances)
+distances.append(0)
+j = -1
+
+## Locate the mile markers
+for i in range(1, int(round(total))):
+    mile = 0
+    while mile < i:
+        j += 1
+        mile += distances[j]
+    measurements.append((int(mile), j))
+    j = -1
+
+## Set up labels for the mile points
+positions = []
+miles = []
+for m, i in measurements:
+    pos = ((i*1.0)/len(elvs)) * 100
+    positions.append(pos)
+    miles.append(m)
+
+## Position the mile marker labels along the x axis
+miles_label = chart.set_axis_labels(Axis.BOTTOM, miles)
+chart.set_axis_positions(miles_label, positions)
+
+## Label the x axis as 'Miles'
+miles_text = chart.set_axis_labels(Axis.BOTTOM, ['MILES', ])
+chart.set_axis_positions(miles_text, [50, ])
+
+## Save the chart
+chart.download('{}_profile.png'.format(elv_img))
 
 
 
