@@ -1,0 +1,11 @@
+*.tar
+*.zip
+*.hgt
+*.pyc
+*.swp
+*.swo
+*.png
+tmp_*
+tags
+MANIFEST
+dist/
