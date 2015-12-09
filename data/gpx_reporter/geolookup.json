@@ -1,0 +1,373 @@
+
+{
+  "response": {
+  "version":"0.1",
+  "termsofService":"http://www.wunderground.com/weather/api/d/terms.html",
+  "features": {
+  "geolookup": 1
+  }
+	}
+		,	"location": {
+		"type":"CITY",
+		"country":"US",
+		"country_iso3166":"US",
+		"country_name":"USA",
+		"state":"ME",
+		"city":"Rockland",
+		"tz_short":"EST",
+		"tz_long":"America/New_York",
+		"lat":"44.110000",
+		"lon":"-69.120000",
+		"zip":"04841",
+		"magic":"1",
+		"wmo":"99999",
+		"l":"/q/zmw:04841.1.99999",
+		"requesturl":"US/ME/Rockland.html",
+		"wuiurl":"http://www.wunderground.com/US/ME/Rockland.html",
+		"nearby_weather_stations": {
+		"airport": {
+		"station": [
+		{ "city":"Rockland", "state":"ME", "country":"US", "icao":"KRKD", "lat":"44.06007385", "lon":"-69.09925842" }
+		,{ "city":"Wiscasset", "state":"ME", "country":"US", "icao":"KIWI", "lat":"43.96361160", "lon":"-69.71166992" }
+		,{ "city":"Augusta", "state":"ME", "country":"US", "icao":"KAUG", "lat":"44.32064819", "lon":"-69.79731750" }
+		,{ "city":"Waterville", "state":"ME", "country":"US", "icao":"KWVL", "lat":"44.53324890", "lon":"-69.67552948" }
+		]
+		}
+		,
+		"pws": {
+		"station": [
+		{
+		"neighborhood":"Thomaston",
+		"city":"Thomaston",
+		"state":"ME",
+		"country":"US",
+		"id":"KMETHOMA4",
+		"lat":44.086731,
+		"lon":-69.194878,
+		"distance_km":6,
+		"distance_mi":3
+		},
+		{
+		"neighborhood":"Beech Hill Road",
+		"city":"Rockport",
+		"state":"ME",
+		"country":"US",
+		"id":"KMEROCKP6",
+		"lat":44.169334,
+		"lon":-69.103600,
+		"distance_km":6,
+		"distance_mi":4
+		},
+		{
+		"neighborhood":"Thomaston",
+		"city":"Thomaston",
+		"state":"ME",
+		"country":"US",
+		"id":"KMETHOMA7",
+		"lat":44.076878,
+		"lon":-69.191078,
+		"distance_km":6,
+		"distance_mi":4
+		},
+		{
+		"neighborhood":"Park Street",
+		"city":"Rockport",
+		"state":"ME",
+		"country":"US",
+		"id":"KMEROCKP4",
+		"lat":44.184223,
+		"lon":-69.134628,
+		"distance_km":8,
+		"distance_mi":5
+		},
+		{
+		"neighborhood":"South Warren, Maine",
+		"city":"Warren",
+		"state":"ME",
+		"country":"US",
+		"id":"KMEWARRE2",
+		"lat":44.069210,
+		"lon":-69.214378,
+		"distance_km":8,
+		"distance_mi":5
+		},
+		{
+		"neighborhood":"Saint George River GRN13",
+		"city":"Saint George",
+		"state":"ME",
+		"country":"US",
+		"id":"KMESAINT2",
+		"lat":44.035492,
+		"lon":-69.193497,
+		"distance_km":10,
+		"distance_mi":6
+		},
+		{
+		"neighborhood":"",
+		"city":"Cushing",
+		"state":"ME",
+		"country":"US",
+		"id":"ISTARTKK2",
+		"lat":44.042900,
+		"lon":-69.206398,
+		"distance_km":10,
+		"distance_mi":6
+		},
+		{
+		"neighborhood":"7 Cedars",
+		"city":"Camden",
+		"state":"ME",
+		"country":"US",
+		"id":"KMECAMDE3",
+		"lat":44.202885,
+		"lon":-69.060631,
+		"distance_km":11,
+		"distance_mi":6
+		},
+		{
+		"neighborhood":"Wayfarer Marine",
+		"city":"Camden",
+		"state":"ME",
+		"country":"US",
+		"id":"KMECAMDE2",
+		"lat":44.208477,
+		"lon":-69.060654,
+		"distance_km":11,
+		"distance_mi":7
+		},
+		{
+		"neighborhood":"Wheeler Bay",
+		"city":"Saint George",
+		"state":"ME",
+		"country":"US",
+		"id":"KMESAINT7",
+		"lat":44.006481,
+		"lon":-69.169235,
+		"distance_km":12,
+		"distance_mi":7
+		},
+		{
+		"neighborhood":"Spruce Head Island",
+		"city":"South Thomaston",
+		"state":"ME",
+		"country":"US",
+		"id":"KMESOUTH29",
+		"lat":43.997089,
+		"lon":-69.117676,
+		"distance_km":12,
+		"distance_mi":7
+		},
+		{
+		"neighborhood":"States Point Road",
+		"city":"Saint George",
+		"state":"ME",
+		"country":"US",
+		"id":"KMESAINT5",
+		"lat":43.978695,
+		"lon":-69.191254,
+		"distance_km":15,
+		"distance_mi":9
+		},
+		{
+		"neighborhood":"Hobbs Pond",
+		"city":"Hope",
+		"state":"ME",
+		"country":"US",
+		"id":"KMEHOPE5",
+		"lat":44.246067,
+		"lon":-69.180420,
+		"distance_km":15,
+		"distance_mi":9
+		},
+		{
+		"neighborhood":"Hope, Maine: Church Street Apple Orchard",
+		"city":"Hope",
+		"state":"ME",
+		"country":"US",
+		"id":"KMEHOPE2",
+		"lat":44.269764,
+		"lon":-69.151398,
+		"distance_km":17,
+		"distance_mi":10
+		},
+		{
+		"neighborhood":"",
+		"city":"Waldoboro",
+		"state":"ME",
+		"country":"US",
+		"id":"KMEWALDO4",
+		"lat":44.096638,
+		"lon":-69.375320,
+		"distance_km":20,
+		"distance_mi":12
+		},
+		{
+		"neighborhood":"Back Cove Road",
+		"city":"Waldoboro",
+		"state":"ME",
+		"country":"US",
+		"id":"KMEWALDO5",
+		"lat":44.016216,
+		"lon":-69.356750,
+		"distance_km":21,
+		"distance_mi":12
+		},
+		{
+		"neighborhood":"Ducktrap Village",
+		"city":"Lincolnville",
+		"state":"ME",
+		"country":"US",
+		"id":"KMELINCO2",
+		"lat":44.300938,
+		"lon":-68.999687,
+		"distance_km":23,
+		"distance_mi":13
+		},
+		{
+		"neighborhood":"South Shore Road",
+		"city":"North Haven",
+		"state":"ME",
+		"country":"US",
+		"id":"KMENORTH9",
+		"lat":44.163242,
+		"lon":-68.828590,
+		"distance_km":23,
+		"distance_mi":14
+		},
+		{
+		"neighborhood":"Levenseller Mountain",
+		"city":"Lincolnville",
+		"state":"ME",
+		"country":"US",
+		"id":"KMELINCO3",
+		"lat":44.327442,
+		"lon":-69.102531,
+		"distance_km":24,
+		"distance_mi":14
+		},
+		{
+		"neighborhood":"Coombs Neck",
+		"city":"Vinalhaven",
+		"state":"ME",
+		"country":"US",
+		"id":"KMEVINAL4",
+		"lat":44.085068,
+		"lon":-68.787964,
+		"distance_km":26,
+		"distance_mi":15
+		},
+		{
+		"neighborhood":"Deerfield Damariscotta",
+		"city":"Damariscotta",
+		"state":"ME",
+		"country":"US",
+		"id":"KMEDAMAR4",
+		"lat":44.024563,
+		"lon":-69.523888,
+		"distance_km":33,
+		"distance_mi":20
+		},
+		{
+		"neighborhood":"Newcastle side of Damariscotta River",
+		"city":"Newcastle",
+		"state":"ME",
+		"country":"US",
+		"id":"KMENEWCA3",
+		"lat":44.027637,
+		"lon":-69.543663,
+		"distance_km":35,
+		"distance_mi":21
+		},
+		{
+		"neighborhood":"West Hamlet Road",
+		"city":"Newcastle",
+		"state":"ME",
+		"country":"US",
+		"id":"KMENEWCA2",
+		"lat":44.055996,
+		"lon":-69.552963,
+		"distance_km":35,
+		"distance_mi":21
+		},
+		{
+		"neighborhood":"Augusta Road",
+		"city":"Jefferson",
+		"state":"ME",
+		"country":"US",
+		"id":"KMEJEFFE2",
+		"lat":44.234745,
+		"lon":-69.525002,
+		"distance_km":35,
+		"distance_mi":21
+		},
+		{
+		"neighborhood":"Harborside",
+		"city":"Brooksville",
+		"state":"ME",
+		"country":"US",
+		"id":"KMEBROOK2",
+		"lat":44.352432,
+		"lon":-68.820023,
+		"distance_km":36,
+		"distance_mi":21
+		},
+		{
+		"neighborhood":"APRSWXNET",
+		"city":"Deer Isle",
+		"state":"ME",
+		"country":"US",
+		"id":"ME8142",
+		"lat":44.244171,
+		"lon":-68.670326,
+		"distance_km":38,
+		"distance_mi":23
+		},
+		{
+		"neighborhood":"Belfast (Lower Mason Pond)",
+		"city":"Belfast",
+		"state":"ME",
+		"country":"US",
+		"id":"KMEBELFA2",
+		"lat":44.451828,
+		"lon":-69.006111,
+		"distance_km":39,
+		"distance_mi":23
+		},
+		{
+		"neighborhood":"APRSWXNET",
+		"city":"Stonington",
+		"state":"ME",
+		"country":"US",
+		"id":"MD7670",
+		"lat":44.076988,
+		"lon":-68.631767,
+		"distance_km":39,
+		"distance_mi":23
+		},
+		{
+		"neighborhood":"Osier Road",
+		"city":"New Harbor",
+		"state":"ME",
+		"country":"US",
+		"id":"KMENEWHA1",
+		"lat":43.876110,
+		"lon":-69.494446,
+		"distance_km":39,
+		"distance_mi":23
+		},
+		{
+		"neighborhood":"APRSWXNET",
+		"city":"Castine",
+		"state":"ME",
+		"country":"US",
+		"id":"MC0730",
+		"lat":44.389091,
+		"lon":-68.804283,
+		"distance_km":39,
+		"distance_mi":23
+		}
+		]
+		}
+		}
+	}
+}

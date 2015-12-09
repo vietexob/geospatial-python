@@ -1,6 +1,8 @@
 '''
 Created on Dec 8, 2015
 
+    Final app: GPS route analysis report.
+    
 @author: trucvietle
 '''
 
@@ -8,17 +10,18 @@ from xml.dom import minidom
 from urllib2 import urlopen
 from pygooglechart import SimpleLineChart
 from pygooglechart import Axis
+
 from PIL import Image
 from PIL import ImageFilter
 from PIL import ImageEnhance
 from PIL import ImageDraw
+
 import numpy as np
 import json
 import srtm
 import math
 import time
 import logging
-import sys
 import fpdf
 
 ## Python logging module provides a more advanced way to track and log program progress.
@@ -229,8 +232,8 @@ log.info('Retrieving SRTM elevation data...')
 ## The SRTM module will try to use a local cache first, and if needed download it.
 srt = srtm.get_data()
 ## Get the image and return a PIL Image object
-print(miny, maxy)
-print(minx, maxx)
+# print(miny, maxy)
+# print(minx, maxx)
 image = srt.get_image((w, h), (miny, maxy), (minx, maxx), 300, zero_color=zero_clr, min_color=min_clr, max_color=max_clr)
 ## Save the image
 image.save(elv_img + '.jpg', 'JPEG')
@@ -393,12 +396,104 @@ chart.set_axis_positions(miles_text, [50, ])
 ## Save the chart
 chart.download('{}_profile.png'.format(elv_img))
 
+log.info('Creating weather summary')
+## Get the bounding box centroid for georeferencing weather data
+centx = minx + ((maxx-minx)/2)
+centy = miny + ((maxy-miny)/2)
 
+## WeatherUnderground API key
+api_key = '0cc5fdfd4599eddf'
+## Get the location id of the route using the bounding box centroid
+## and the geolookup API
+geolookup_reg = 'http://api.wunderground.com/api/{}'.format(api_key)
+geolookup_reg += '/geolookup/q/{},{}.json'.format(centy, centx)
+request = urlopen(geolookup_reg)
+geolookup_data = request.read().decode('utf-8')  
 
+## Cache lookup data for testing if needed
+with open('./data/gpx_reporter/geolookup.json', 'w') as f:
+    f.write(geolookup_data)
 
+js = json.loads(open('./data/gpx_reporter/geolookup.json').read())
+loc = js['location']
+route_url = loc['requesturl']
 
+## Grab the latest route timestamp to query weather history
+t = times[-1]
+history_reg = 'http://api.wunderground.com/api/{}'.format(api_key)
+name_info = [t.tm_year, t.tm_mon, t.tm_mday, route_url.split('.')[0]]
+history_reg += '/history_{0}{1:02d}{2:02d}/q/{3}.json'.format(*name_info)
+request = urlopen(history_reg)
+weather_data = request.read()
 
+## Cache weather data for testing
+with open('./data/gpx_reporter/weather.json', 'w') as f:
+    f.write(weather_data.decode('utf-8'))
 
+## Retrieve weather data
+js = json.loads(open('./data/gpx_reporter/weather.json').read())
+history = js['history']
 
+## Grab the weather summary data: first item in the list
+daily = history['dailysummary'][0]
 
+## Max temperature in Fahrenheit. Celcius would be metric: 'maxtempm'.
+maxtemp = daily['maxtempi']
+## Min temperature
+mintemp = daily['mintempi']
+## Max humidity
+maxhum = daily['maxhumidity']
+## Min humidity
+minhum = daily['minhumidity']
 
+## Precipitation in inches (cm = 'precipm')
+precip = daily['precipi']
+
+## Simple fpdf.py library for our report. New pdf, portrait mode, inches, letter size
+pdf = fpdf.FPDF('P', 'in', 'Letter')
+
+## Add our one-page report
+pdf.add_page()
+## Set up the title
+pdf.set_font('Arial', 'B', 20)
+## Cells containing text or space items horizontally
+pdf.cell(6.25, 1, 'GPX Report', border=0, align='C')
+## Lines space items vertically (units in inches)
+pdf.ln(h=1)
+pdf.cell(1.75)
+
+## Create a horizontal rule line
+pdf.cell(4, border='T')
+pdf.ln(h=0)
+pdf.set_font('Arial', style='B', size=14)
+
+## Set up the route map
+pdf.cell(w=1.2, h=1, txt='Route Map', border=0, align='C')
+pdf.image('{}_topo.jpg'.format(osm_img), 1, 2, 4, 4)
+pdf.ln(h=4.35)
+
+## Add elevation chart
+pdf.set_font('Arial', style='B', size=14)
+pdf.cell(w=1.2, h=1, txt='Elevation Profile', border=0, align='C')
+pdf.image('{}_profile.png'.format(elv_img), 1, 6.5, 4, 2)
+pdf.ln(h=2.4)
+
+## Write the weather summary
+pdf.set_font('Arial', style='B', size=14)
+pdf.cell(1.2, 1, 'Weather Summary', align='C')
+pdf.ln(h=0.25)
+pdf.set_font('Arial', style='', size=12)
+pdf.cell(1.2, 1, 'Min. Temp.: {}'.format(mintemp), align='C')
+pdf.cell(1.2, 1, 'Max. Hum.: {}'.format(maxhum), align='C')
+pdf.ln(h = 0.25)
+pdf.cell(1.2, 1, 'Max. Temp.: {}'.format(maxtemp), align='C')
+pdf.cell(1.2, 1, 'Precip.: {}'.format(precip), align='C')
+pdf.ln(h=0.25)
+pdf.cell(1.2, 1, 'Min. Hum.: {}'.format(minhum), align='C')
+
+## Give Wunderground credit for their service
+pdf.image('./figures/gpx_reporter/wundergroundLogo_black_horz.jpg', 3.5, 9, 1.75, 0.25)
+
+## Save the report
+log.info('Saving report as PDF')
+pdf.output('./data/gpx_reporter/report.pdf', 'F')
